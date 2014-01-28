@@ -16,5 +16,21 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
+    
+    <style name="DefaultActivity">
+        <item name="android:background">@color/app_background</item>
+    </style>
+    <style name="DefaultItem">
+        <item name="android:paddingTop">@dimen/default_item_margin</item>
+        <item name="android:paddingBottom">@dimen/default_item_margin</item>
+        <item name="android:paddingLeft">@dimen/default_item_margin</item>
+        <item name="android:paddingRight">@dimen/default_item_margin</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/list_item_background</item>
+    </style>
+    <style name="DefaultButton" parent="DefaultItem">
+        <item name="android:background">@color/button_back</item>
+    </style>
 
 </resources>

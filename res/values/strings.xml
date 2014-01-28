@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    
+    <!-- GLOBAL -->
     <string name="app_name">My Dropbox e-Library</string>
     <string name="action_about">About</string>
     
-
+    <!-- HOME activity -->
+    <string name="home_login_btn">Log in to Dropbox</string>
+    <string name="home_sign_in">You don\'t have a Dropbox account?  
+    Go to www.dropbox.com an create one</string>
+    
 </resources>

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <!-- GLOBAL -->
     <string name="app_name">My Dropbox e-Library</string>
     <string name="action_about">Acerca de</string>
     
+    <!-- HOME activity -->
+    <string name="home_login_btn"></string>
 
 </resources>

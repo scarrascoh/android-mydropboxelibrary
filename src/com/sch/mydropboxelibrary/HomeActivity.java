@@ -20,6 +20,7 @@ package com.sch.mydropboxelibrary;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
+import android.view.View;
 
 public class HomeActivity extends Activity {
 
@@ -27,6 +28,9 @@ public class HomeActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
+		
+		//FIXME 0. Comprobar si ya se ha iniciado sesión
+		// En ese caso, ir al layout de la libreria
 	}
 
 	@Override
@@ -34,6 +38,14 @@ public class HomeActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.home, menu);
 		return true;
+	}
+	
+	/**
+	 * Event triggered when the login button is clicked
+	 * @param view
+	 */
+	public void onClickLoginBtn(View view){
+		//FIXME 0.0 Implementar
 	}
 
 }

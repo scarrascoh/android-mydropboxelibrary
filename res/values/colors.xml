@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <!-- GLOBAL -->
+    <color name="app_background">#DBDBDB</color>
+    <color name="list_item_border">#BEBEBE</color>
+    <color name="list_item_background">#ffffff</color>
+    <color name="section_title_text">#545454</color>
+    <color name="transparent">#00000000</color>
+    <color name="button_back">#9FB6CD</color>
+    <color name="flash_notice_back">#00CD66</color>
+    <color name="flash_notice_text">#ffffff</color>
+    <color name="flash_warning_back">#FFC125</color>
+    <color name="flash_warning_text">#000001</color>
+    <color name="flash_alert_back">#8B1A1A</color>
+    <color name="flash_alert_text">#ffffff</color>
+    <color name="button_back_blue">#B9D3EE</color>
+    <color name="blue">#104E8B</color>
+    
+    <!-- HOME activity -->
+    
+</resources>
