@@ -8,6 +8,12 @@
     <!-- HOME activity -->
     <string name="home_login_btn">Log in to Dropbox</string>
     <string name="home_sign_in">You don\'t have a Dropbox account?  
-    Go to www.dropbox.com an create one</string>
-    
+    Go to www.dropbox.com an create one
+    </string>
+    <string name="sample_text">Sample text!</string>
+    <string name="no_image">Image not found</string>
+    <string name="no_access">You have not permission to access</string>
+    <string name="invalid_login">The login was unsuccessful or cancelled by 
+    the user
+    </string>
 </resources>
