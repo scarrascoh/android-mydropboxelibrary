@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -37,6 +37,14 @@
     </style>
     <style name="DefaultButton" parent="DefaultItem">
         <item name="android:background">@color/button_back</item>
+    </style>
+    
+    <!-- Ebooks ListView -->
+    <style name="EbookSubText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/subtext</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
 </resources>

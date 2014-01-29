@@ -1,22 +1,35 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
    android:id="@+id/item_list"
-   android:orientation="vertical"
 	 style="@style/DefaultItem" >
 	 
 	   <ImageView
-	     android:id="@+id/itl_book_image"
-	     android:layout_width="30dp"
-	     android:layout_height="30dp"
-	     android:layout_marginTop="10dp"
+	     android:id="@+id/itl_book_icon"
+	     android:layout_width="40dp"
+	     android:layout_height="50dp"
+       android:layout_marginRight="5dp"
 	     android:contentDescription="@string/no_image"
 	     android:src="@drawable/ic_book" />
 	   
 	   <TextView
-	     android:id="@+id/itl_book_title"
+	     android:id="@+id/itl_title_label"
 	     android:layout_width="match_parent"
 	     android:layout_height="wrap_content"
-	     android:layout_alignTop="@id/itl_book_image"
-	     android:layout_alignBottom="@id/itl_book_image"
-	     android:layout_toRightOf="@id/itl_book_image"
+       android:textSize="14sp"
+	     android:layout_alignTop="@id/itl_book_icon"
+	     android:layout_toRightOf="@id/itl_book_icon"
 	     android:text="@string/sample_text" />
+     
+     <TextView
+       android:id="@+id/itl_creation_date_label"
+       style="@style/EbookSubText"
+       android:layout_below="@id/itl_title_label"
+       android:layout_toRightOf="@id/itl_book_icon"
+       android:text="@string/sample_text" />
+     
+     <TextView
+       android:id="@+id/itl_filename_label"
+       style="@style/EbookSubText"
+       android:layout_below="@id/itl_creation_date_label"
+       android:layout_toRightOf="@id/itl_book_icon"
+       android:text="@string/sample_text" />
 	</RelativeLayout>

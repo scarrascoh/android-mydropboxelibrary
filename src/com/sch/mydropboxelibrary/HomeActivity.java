@@ -17,6 +17,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 package com.sch.mydropboxelibrary;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.dropbox.sync.android.DbxAccountManager;
@@ -24,8 +25,10 @@ import com.dropbox.sync.android.DbxException;
 import com.dropbox.sync.android.DbxException.Unauthorized;
 import com.dropbox.sync.android.DbxFileInfo;
 import com.dropbox.sync.android.DbxFileSystem;
+import com.dropbox.sync.android.DbxList;
 import com.dropbox.sync.android.DbxPath;
-import com.sch.mydropboxelibrary.adapters.EBookArrayAdapter;
+import com.sch.mydropboxelibrary.adapters.EbookArrayAdapter;
+import com.sch.mydropboxelibrary.model.EBook;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -94,17 +97,24 @@ public class HomeActivity extends Activity {
 	 * in the Dropbox current folder
 	 */
 	private void listEBooks(){
-		List<DbxFileInfo> ebooks;
-		EBookArrayAdapter adapter;
-		ListView listview = (ListView) findViewById(R.id.ebooks_list);
-		
 		setContentView(R.layout.ebooks_listview);
+		
+		List<EBook> ebooks = new ArrayList<EBook>();
+		EbookArrayAdapter adapter;
+		ListView listview = (ListView) findViewById(R.id.ebooks_list);
+		List<DbxFileInfo> folderItems;
+		
 		try {
 			DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-			ebooks = dbxFs.listFolder(DbxPath.ROOT);
+			folderItems = dbxFs.listFolder(DbxPath.ROOT);
+			//
+			// TODO 0. Seguir aqui. Listar carpetas y ebooks
+			// Crear otro list view para cambiar de dirctorio? creo q no, mejor uno 
+			// con carpetas o un fragment en el que elegir la ruta que aparezca
+			// sobre el layout y luego debajo los libros??
+			
 			// Pass list to the adapter to create the list of ebooks
-			adapter = new EBookArrayAdapter(this, R.id.item_list, ebooks);
-			//FIXME 0. debug here
+			adapter = new EbookArrayAdapter(this, ebooks);
 			listview.setAdapter(adapter);
 			listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 		      @Override
