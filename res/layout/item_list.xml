@@ -1,10 +1,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-   android:id="@+id/ebook"
+   android:id="@+id/item_list"
    android:orientation="vertical"
 	 style="@style/DefaultItem" >
 	 
 	   <ImageView
-	     android:id="@+id/book_image"
+	     android:id="@+id/itl_book_image"
 	     android:layout_width="30dp"
 	     android:layout_height="30dp"
 	     android:layout_marginTop="10dp"
@@ -12,10 +12,11 @@
 	     android:src="@drawable/ic_book" />
 	   
 	   <TextView
-	     android:id="@+id/movie_title"
+	     android:id="@+id/itl_book_title"
 	     android:layout_width="match_parent"
-	     android:layout_height="30dp"
-	     android:layout_alignTop="@id/book_image"
-	     android:layout_toRightOf="@id/book_image"
+	     android:layout_height="wrap_content"
+	     android:layout_alignTop="@id/itl_book_image"
+	     android:layout_alignBottom="@id/itl_book_image"
+	     android:layout_toRightOf="@id/itl_book_image"
 	     android:text="@string/sample_text" />
 	</RelativeLayout>

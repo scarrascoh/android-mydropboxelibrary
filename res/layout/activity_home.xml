@@ -27,7 +27,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
         android:onClick="onClickLoginBtn"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:layout_margin="16dp"
+        android:layout_margin="30dp"
         />
     
     <TextView 
@@ -39,6 +39,17 @@ with this program; if not, write to the Free Software Foundation, Inc.,
         android:layout_marginRight="16dp"
         android:layout_marginLeft="16dp"
         android:textColor="@color/blue"
+        android:autoLink="web"
+        />
+    
+    <TextView 
+        android:id="@+id/home_infotext"
+        style="@style/DefaultItem"
+        android:background="@color/transparent"
+        android:layout_above="@id/home_btn_login"
+        android:text=""
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
         android:autoLink="web"
         />
 

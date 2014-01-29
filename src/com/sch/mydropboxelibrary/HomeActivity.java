@@ -17,19 +17,31 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 package com.sch.mydropboxelibrary;
 
+import java.util.List;
+
 import com.dropbox.sync.android.DbxAccountManager;
+import com.dropbox.sync.android.DbxException;
 import com.dropbox.sync.android.DbxException.Unauthorized;
+import com.dropbox.sync.android.DbxFileInfo;
 import com.dropbox.sync.android.DbxFileSystem;
+import com.dropbox.sync.android.DbxPath;
+import com.sch.mydropboxelibrary.adapters.EBookArrayAdapter;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class HomeActivity extends Activity {
-
+	private Toast toast;
 	private DbxAccountManager mDbxAcctMgr;
 	final static int REQUEST_LINK_TO_DBX = 0;  // This value is up to you
 	
@@ -54,6 +66,7 @@ public class HomeActivity extends Activity {
 	 * @param view
 	 */
 	public void onClickLoginBtn(View view){
+		((TextView) findViewById(R.id.home_infotext)).setText("");
 		/* Check if the user is linked with Dropbox */
 		if(!mDbxAcctMgr.hasLinkedAccount()){
 			mDbxAcctMgr.startLink((Activity)this, REQUEST_LINK_TO_DBX);
@@ -81,12 +94,33 @@ public class HomeActivity extends Activity {
 	 * in the Dropbox current folder
 	 */
 	private void listEBooks(){
+		List<DbxFileInfo> ebooks;
+		EBookArrayAdapter adapter;
+		ListView listview = (ListView) findViewById(R.id.ebooks_list);
+		
+		setContentView(R.layout.ebooks_listview);
 		try {
 			DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-			//TODO 1. Seguir aqui 2
+			ebooks = dbxFs.listFolder(DbxPath.ROOT);
+			// Pass list to the adapter to create the list of ebooks
+			adapter = new EBookArrayAdapter(this, R.id.item_list, ebooks);
+			//FIXME 0. debug here
+			listview.setAdapter(adapter);
+			listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		      @Override
+		      public void onItemClick (AdapterView<?> parent, final View view,
+		          int position, long id) {
+		        displayToast("Clicked: "+view.getId());
+		        //FIXME 0. Cambiar, mostrar la imagen on double click
+		        //usar variable con temporizador? de 500ms
+		      }
+		    });
 		} catch (Unauthorized e) {
 			Log.e("exception", "Unathourized to access to files");
 			showErrorLoginMessage(getString(R.string.no_access));
+		} catch (DbxException e) {
+			Log.e("exception", e.getMessage());
+			displayToast(getString(R.string.error_loading_books));
 		}
 	}
 	
@@ -95,8 +129,21 @@ public class HomeActivity extends Activity {
 	 * @param msg the error message to show
 	 */
 	private void showErrorLoginMessage(String msg){
-		
+		setContentView(R.layout.activity_home);
+		final TextView view = (TextView) findViewById(R.id.home_infotext);
+		view.setText(msg);
+		view.setTextColor(getResources().getColor(R.color.error_msg));
 	}
 	
+	
+	/**
+	 * Cancel the current toast, set new text and show it
+	 * @param message
+	 */
+	private final void displayToast(final String message) {
+		toast.cancel();
+		toast.setText(message); 
+		toast.show();
+	}
 	
 }

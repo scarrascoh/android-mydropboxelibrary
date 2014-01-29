@@ -16,4 +16,5 @@
     <string name="invalid_login">The login was unsuccessful or cancelled by 
     the user
     </string>
+    <string name="error_loading_books">Error loading the list of eBooks</string>
 </resources>
