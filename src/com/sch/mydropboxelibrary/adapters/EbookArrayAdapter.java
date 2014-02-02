@@ -24,9 +24,11 @@ import java.util.List;
 import com.sch.mydropboxelibrary.R;
 import com.sch.mydropboxelibrary.model.EBook;
 
+import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -111,13 +113,7 @@ public class EbookArrayAdapter extends ArrayAdapter<EBook> {
 		}
 		// Set item content
 		EBook ebook = ebooksList.get(position);
-		try {
-			holder.bookIcon.setImageDrawable(Drawable.createFromStream(
-					ebook.getCoverImage().getInputStream(), "ic_ebook_"+position));
-		} catch (IOException e) {
-			holder.bookIcon.setImageResource(R.drawable.ic_book);
-			Log.e("ebookarray", "Image couldn't be loaded"+e.getMessage());
-		};
+		holder.bookIcon.setImageDrawable(ebook.getCoverImage());
 		holder.titleLabel.setText(ebook.getTitle());
 		holder.creationDateLabel.setText(SimpleDateFormat.getDateInstance()
 				.format(ebook.getCreationDate()));
@@ -145,6 +141,8 @@ public class EbookArrayAdapter extends ArrayAdapter<EBook> {
 	 * Show the cover of the specified ebook
 	 * @param pos
 	 */
+	@SuppressWarnings("deprecation")
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	private void showEBookCover(EBook ebook){
 		Context context = this.getContext();
 		// Get screen size
@@ -176,7 +174,10 @@ public class EbookArrayAdapter extends ArrayAdapter<EBook> {
 		dialog.setContentView(R.xml.ebook_cover);
 
 		ImageView image = (ImageView) dialog.findViewById(R.id.imageview);
-		image.setBackgroundResource(R.drawable.ic_book);
+		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN)
+			image.setBackgroundDrawable(ebook.getCoverImage());
+		else
+			image.setBackground(ebook.getCoverImage());
 
 		// Without this line there is a very small border around the image (1px)
 		dialog.getWindow().setBackgroundDrawable(null);

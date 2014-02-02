@@ -19,14 +19,14 @@ package com.sch.mydropboxelibrary.model;
 
 import java.util.Date;
 
-import nl.siegmann.epublib.domain.Resource;
+import android.graphics.drawable.Drawable;
 
 /**
  * Represent an e-book file in the model of this App with attributes like 
  * title, creation date and can be extended to contain author, book icon...
  * 
  * @author Sergio Carrasco Herranz (scarrascoh at gmail dot com)
- * @version 1.3
+ * @version 1.3.1
  */
 public class EBook {
 	private String title;
@@ -34,7 +34,7 @@ public class EBook {
 	private Date creationDate;
 	private String filename;
 	private EBookType type;
-	private Resource coverImage;
+	private Drawable coverImage;
 	
 	/**
 	 * Create a new e-book
@@ -45,7 +45,7 @@ public class EBook {
 	 * @param type the type of ebook
 	 */
 	public EBook(String title, String author, Date creationDate, String filename, 
-			EBookType type, Resource coverImage) {
+			EBookType type, Drawable coverImage) {
 		this.title = title;
 		this.author = author;
 		this.creationDate = creationDate;
@@ -131,14 +131,14 @@ public class EBook {
 	/**
 	 * @return the coverImage
 	 */
-	public Resource getCoverImage() {
+	public Drawable getCoverImage() {
 		return coverImage;
 	}
 
 	/**
 	 * @param coverImage the coverImage to set
 	 */
-	public void setCoverImage(Resource coverImage) {
+	public void setCoverImage(Drawable coverImage) {
 		this.coverImage = coverImage;
 	}
 

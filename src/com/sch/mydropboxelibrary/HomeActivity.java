@@ -17,6 +17,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
  */
 package com.sch.mydropboxelibrary;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipInputStream;
@@ -43,6 +44,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -187,12 +189,14 @@ public class HomeActivity extends Activity {
 				EpubReader epubreader = new EpubReader();
 				Book book = null;
 				ZipInputStream zipinstream = null;
+				Drawable bookCover = null;
 
 				/*
 				 * Open file if it's an epub file, get the title and author and
 				 * create a new object according to the model
 				 */
-				for (DbxFileInfo dbxfileInfo : folderItems) {
+				for (int i=0; i < folderItems.size(); i++) {
+					DbxFileInfo dbxfileInfo = folderItems.get(i);
 					if (dbxfileInfo.isFolder
 							|| !dbxfileInfo.path.getName().endsWith(".epub"))
 						continue;// skip folders
@@ -207,11 +211,18 @@ public class HomeActivity extends Activity {
 							author += ", " + authorB.getFirstname()
 									+ authorB.getLastname();
 						}
+						try {
+							bookCover = Drawable.createFromStream(
+								book.getCoverImage().getInputStream(), "ic_ebook_"+i);
+						} catch (IOException e) {
+							bookCover = getResources().getDrawable(R.drawable.ic_book);
+							Log.e("homeebook", "Image couldn't be loaded"+e.getMessage());
+						};
 						ebooksL.add(new EBook(metabook.getFirstTitle(), author,
 								dbxfileInfo.modifiedTime, 
 								dbxfileInfo.path.getName(), 
 								EBook.EBookType.EPUB, 
-								book.getCoverImage()));
+								bookCover));
 						zipinstream.close();
 					} catch (Exception e) {
 						// If a file is not valid or can't be opened, it
