@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2014  Sergio Carrasco Herranz
+Copyright (C) 2014 Sergio Carrasco Herranz
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -35,33 +35,28 @@ import com.dropbox.sync.android.DbxFileSystem;
 import com.dropbox.sync.android.DbxPath;
 import com.sch.mydropboxelibrary.adapters.EbookArrayAdapter;
 import com.sch.mydropboxelibrary.model.EBook;
+import com.sch.mydropboxelibrary.model.comparators.*;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
-import android.view.Display;
-import android.view.GestureDetector;
 import android.view.Menu;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * Home activity. Shows a button for login with Dropbox and the list of ebooks 
+ * existing in Dropbox when the user is logged.
+ * 
+ * @author Sergio Carrasco Herranz (scarrascoh at gmail dot com)
+ * @version 1.1
+ */
 public class HomeActivity extends Activity {
 	private ProgressDialog progdialog = null;
 	private List<EBook> ebooks;
@@ -157,50 +152,6 @@ public class HomeActivity extends Activity {
 	public void onClickChangeDirBtn(View view) {
 		displayToast("Implement: Show fragment with the folders of the current directory");
 	}
-	
-	/**
-	 * Show the cover of the specified ebook
-	 * @param pos
-	 */
-	private void showEBookCover(EBook ebook){
-		Context context = this;
-		// Get screen size
-		/*Display display = getWindowManager().getDefaultDisplay();
-		Point size = new Point();
-		display.getSize(size);
-		int screenWidth = size.x;
-		int screenHeight = size.y;
-
-		// Get target image size
-		Bitmap bitmap = BitmapFactory.decodeFile(TARGET);
-		int bitmapHeight = bitmap.getHeight();
-		int bitmapWidth = bitmap.getWidth();
-
-		// Scale the image down to fit perfectly into the screen
-		// The value (250 in this case) must be adjusted for phone/tables displays
-		while(bitmapHeight > (screenHeight - 250) || bitmapWidth > (screenWidth - 250)) {
-		    bitmapHeight = bitmapHeight / 2;
-		    bitmapWidth = bitmapWidth / 2;
-		}
-
-		// Create resized bitmap image
-		BitmapDrawable resizedBitmap = new BitmapDrawable(context.getResources(), 
-				Bitmap.createScaledBitmap(bitmap, bitmapWidth, bitmapHeight, false));*/
-
-		// Create dialog
-		Dialog dialog = new Dialog(context);
-		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		dialog.setContentView(R.xml.ebook_cover);
-
-		ImageView image = (ImageView) dialog.findViewById(R.id.imageview);
-		image.setBackground();
-
-		// Without this line there is a very small border around the image (1px)
-		dialog.getWindow().setBackgroundDrawable(null);
-
-		dialog.show();
-	}
-	
 
 	/* ************************* SUBCLASSES ***************************** */
 	
@@ -257,8 +208,10 @@ public class HomeActivity extends Activity {
 									+ authorB.getLastname();
 						}
 						ebooksL.add(new EBook(metabook.getFirstTitle(), author,
-								dbxfileInfo.modifiedTime, dbxfileInfo.path
-										.getName(), EBook.EBookType.EPUB));
+								dbxfileInfo.modifiedTime, 
+								dbxfileInfo.path.getName(), 
+								EBook.EBookType.EPUB, 
+								book.getCoverImage()));
 						zipinstream.close();
 					} catch (Exception e) {
 						// If a file is not valid or can't be opened, it
@@ -288,36 +241,12 @@ public class HomeActivity extends Activity {
 
 			// Pass the result data back to the main activity
 			HomeActivity.this.ebooks = result;
-
+			
 			// Pass list to the adapter to create the list of ebooks
+			// sort by title (by default)
 			adapter = new EbookArrayAdapter(HomeActivity.this, ebooks);
+			adapter.sort(new EBookTitleComparator());
 			listview.setAdapter(adapter);
-			//FIXME 0. Mover al adaptador (ejecutar cuando se pulsa la iamgen)
-			listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-				private int clicks = 0;
-				@Override
-				public void onItemClick(AdapterView<?> parent, final View view,
-						int position, long id) {
-					// displayToast("Clicked: " + ((EBook)
-					// parent.getAdapter().getItem(position)).getTitle());
-					
-	                Handler handler = new Handler();
-	                Runnable r = new Runnable() {                   
-	                    @Override
-	                    public void run() {
-	                        clicks = 0;
-	                    }
-	                };
-	                if (clicks == 0) {
-	                	//displayToast("single click!");
-	                    handler.postDelayed(r, 1000);
-	                } else if (clicks == 1) {
-	                	clicks = 0;
-	                	showEBookCover((EBook) parent.getAdapter().getItem(position));
-	                }
-	                clicks++;
-				}
-			});
 			
 			// remove progress dialog
 			if (HomeActivity.this.progdialog != null) {

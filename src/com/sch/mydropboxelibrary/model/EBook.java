@@ -1,33 +1,40 @@
+/*
+Copyright (C) 2014 Sergio Carrasco Herranz
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 package com.sch.mydropboxelibrary.model;
 
 import java.util.Date;
 
-import android.graphics.drawable.Drawable;
-import android.util.Log;
+import nl.siegmann.epublib.domain.Resource;
 
 /**
  * Represent an e-book file in the model of this App with attributes like 
  * title, creation date and can be extended to contain author, book icon...
  * 
  * @author Sergio Carrasco Herranz (scarrascoh at gmail dot com)
- * @version 1.1
+ * @version 1.3
  */
 public class EBook {
-	
-	/**
-	 * Types of e-books interpreted by this App
-	 *
-	 */
-	public enum EBookType{
-		EPUB;
-	}
-	
-	private String coverfile = "ic_book.jpg";
 	private String title;
 	private String author;
 	private Date creationDate;
 	private String filename;
 	private EBookType type;
+	private Resource coverImage;
 	
 	/**
 	 * Create a new e-book
@@ -38,13 +45,13 @@ public class EBook {
 	 * @param type the type of ebook
 	 */
 	public EBook(String title, String author, Date creationDate, String filename, 
-			EBookType type) {
+			EBookType type, Resource coverImage) {
 		this.title = title;
 		this.author = author;
 		this.creationDate = creationDate;
 		this.filename = filename;
 		this.setType(type);
-		Log.d("Ebook", "Created ebook: "+this.toString());
+		this.coverImage = coverImage;
 	}
 	
 	/* *********************** GETTERS/SETTERS ********************* */
@@ -120,19 +127,19 @@ public class EBook {
 	public void setAuthor(String author) {
 		this.author = author;
 	}
-	
+
 	/**
-	 * @return the coverfile
+	 * @return the coverImage
 	 */
-	public String getCoverfile() {
-		return coverfile;
+	public Resource getCoverImage() {
+		return coverImage;
 	}
 
 	/**
-	 * @param coverfile the coverfile to set
+	 * @param coverImage the coverImage to set
 	 */
-	public void setCoverfile(String coverfile) {
-		this.coverfile = coverfile;
+	public void setCoverImage(Resource coverImage) {
+		this.coverImage = coverImage;
 	}
 
 	@Override
@@ -141,4 +148,14 @@ public class EBook {
 				+ ", creationDate=" + creationDate + ", filename=" + filename
 				+ ", type=" + type + "]";
 	}
+	
+	
+	/* ********************** SUBCLASSES ********************** */
+	/**
+	 * Types of e-books interpreted by this App
+	 *
+	 */
+	public enum EBookType{
+		EPUB;
+	}	
 }
