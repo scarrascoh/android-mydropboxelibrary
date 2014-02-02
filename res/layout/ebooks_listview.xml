@@ -49,7 +49,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
       android:layout_height="wrap_content"
       android:layout_below="@id/ebl_btn_changedir"
       android:layout_toRightOf="@id/sort_text" 
-      android:entries="@array/sort_types" 
+      android:entries="@array/sort_types"
   />
 
   <ListView

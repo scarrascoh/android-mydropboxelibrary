@@ -17,7 +17,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
  */
 package com.sch.mydropboxelibrary.adapters;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -27,10 +26,8 @@ import com.sch.mydropboxelibrary.model.EBook;
 import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +40,7 @@ import android.widget.TextView;
  * Adapter for list Dropbox files with extesion epub (ebooks)
  * 
  * @author Sergio Carrasco Herranz (scarrascoh at gmail dot com)
- * @version 1.1
+ * @version 1.2
  */
 public class EbookArrayAdapter extends ArrayAdapter<EBook> {
 	// HashMap<DbxFileInfo, Integer> mIdMap = new HashMap<DbxFileInfo, Integer>();
@@ -145,6 +142,7 @@ public class EbookArrayAdapter extends ArrayAdapter<EBook> {
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	private void showEBookCover(EBook ebook){
 		Context context = this.getContext();
+		//
 		// Get screen size
 		/*Display display = getWindowManager().getDefaultDisplay();
 		Point size = new Point();

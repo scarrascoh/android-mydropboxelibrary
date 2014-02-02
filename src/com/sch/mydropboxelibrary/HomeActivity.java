@@ -48,7 +48,10 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -246,10 +249,9 @@ public class HomeActivity extends Activity {
 		@Override
 		protected void onPostExecute(List<EBook> result) {
 			setContentView(R.layout.ebooks_listview);
+			final ListView listview = (ListView) findViewById(R.id.ebooks_list);
+			final EbookArrayAdapter adapter;
 			
-			EbookArrayAdapter adapter;
-			ListView listview = (ListView) findViewById(R.id.ebooks_list);
-
 			// Pass the result data back to the main activity
 			HomeActivity.this.ebooks = result;
 			
@@ -258,6 +260,27 @@ public class HomeActivity extends Activity {
 			adapter = new EbookArrayAdapter(HomeActivity.this, ebooks);
 			adapter.sort(new EBookTitleComparator());
 			listview.setAdapter(adapter);
+			
+			//Set on change event for spinner
+			Spinner spinner = (Spinner) findViewById(R.id.sort_type);
+			spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+				@Override
+				public void onItemSelected(AdapterView<?> parent, View view,
+						int position, long id) {
+					if(parent.getItemAtPosition(position)
+							.equals(getString(R.string.sort_by_date))){
+						adapter.sort(new EBookDateComparator());
+					}else{//Default option
+						adapter.sort(new EBookTitleComparator());
+					}
+					//listview.setAdapter(adapter);
+				}
+
+				@Override
+				public void onNothingSelected(AdapterView<?> arg0) {
+					// Do nothing
+				}
+			});
 			
 			// remove progress dialog
 			if (HomeActivity.this.progdialog != null) {
