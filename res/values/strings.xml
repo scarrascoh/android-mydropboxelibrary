@@ -17,4 +17,13 @@
     the user
     </string>
     <string name="error_loading_books">Error loading the list of eBooks</string>
+    <string name="ebl_btn_changedir">Change folder</string>
+    <string name="ebl_curdir">/</string>
+    <string name="sort_by_title">title</string>
+    <string name="sort_by_date">date</string>
+    <string name="sort_type">Sort by</string>
+    <string name="no_entry">No entries</string>
+    <string name="loading_title">Loading</string>
+    <string name="loading_gen">Loading&#8230;</string>
+    <string name="loading_ebooks">Loading list of ebooks. Please wait&#8230;</string>
 </resources>

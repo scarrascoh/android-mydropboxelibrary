@@ -29,12 +29,9 @@ public class EbookArrayAdapter extends ArrayAdapter<EBook> {
 	// FIXME 0. Crear un custom adapter??
 	/**
 	 * 
-	 * @param context
-	 *            the context (e.g: this)
-	 * @param itemLayout
-	 *            the layout used to visualize the items
-	 * @param ebookslist
-	 *            a list with the items to show
+	 * @param context the context (e.g: this)
+	 * @param itemLayout the layout used to visualize the items
+	 * @param ebookslist a list with the items to show
 	 */
 	public EbookArrayAdapter(Context context, List<EBook> ebookslist) {
 		super(context, R.layout.item_list, ebookslist);

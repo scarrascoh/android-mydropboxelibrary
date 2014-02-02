@@ -15,9 +15,48 @@ You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 -->
-<ListView 
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/ebooks_list" 
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     style="@style/DefaultActivity" >
-    
-</ListView>
+  <TextView 
+      android:id="@+id/ebl_curdir"
+      style="@style/DefaultItem"
+      android:text="@string/ebl_curdir"
+      android:layout_marginBottom="7dp"
+  />
+  <Button  
+      android:id="@+id/ebl_btn_changedir"
+      style="@style/DefaultButton"
+      android:layout_width="wrap_content"
+      android:text="@string/ebl_btn_changedir"
+      android:layout_below="@id/ebl_curdir"
+      android:onClick="onClickChangeDirBtn"
+  />
+  <TextView 
+      android:id="@+id/sort_text"
+      style="@style/DefaultItem"
+      android:layout_width="wrap_content"
+      android:layout_below="@id/ebl_btn_changedir"
+      android:text="@string/sort_type"
+      android:layout_marginBottom="7dp"
+      android:background="@color/app_background"
+  />
+  <Spinner
+      android:id="@+id/sort_type"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/ebl_btn_changedir"
+      android:layout_toRightOf="@id/sort_text" 
+      android:entries="@array/sort_types" 
+  />
+
+  <ListView
+      android:id="@+id/ebooks_list"
+      style="@style/DefaultItem"
+      android:layout_below="@id/sort_type"
+      tools:listitem="@layout/item_list" >
+  </ListView>
+
+</RelativeLayout>

@@ -2,12 +2,14 @@ package com.sch.mydropboxelibrary.model;
 
 import java.util.Date;
 
+import android.util.Log;
+
 /**
  * Represent an e-book file in the model of this App with attributes like 
  * title, creation date and can be extended to contain author, book icon...
  * 
  * @author Sergio Carrasco Herranz (scarrascoh at gmail dot com)
- * @version 1.0
+ * @version 1.1
  */
 public class EBook {
 	
@@ -15,11 +17,12 @@ public class EBook {
 	 * Types of e-books interpreted by this App
 	 *
 	 */
-	enum EBookType{
+	public enum EBookType{
 		EPUB;
 	}
 	
 	private String title;
+	private String author;
 	private Date creationDate;
 	private String filename;
 	private EBookType type;
@@ -32,15 +35,18 @@ public class EBook {
 	 * @param filename the name of the file associated with it
 	 * @param type the type of ebook
 	 */
-	public EBook(String title, Date creationDate, String filename, EBookType type) {
+	public EBook(String title, String author, Date creationDate, String filename, 
+			EBookType type) {
 		this.title = title;
+		this.author = author;
 		this.creationDate = creationDate;
 		this.filename = filename;
 		this.setType(type);
+		Log.d("Ebook", "Created ebook: "+this.toString());
 	}
 	
 	/* *********************** GETTERS/SETTERS ********************* */
-	
+
 	/**
 	 * @return the title
 	 */
@@ -97,5 +103,26 @@ public class EBook {
 	 */
 	public void setType(EBookType type) {
 		this.type = type;
+	}
+
+	/**
+	 * @return the author
+	 */
+	public String getAuthor() {
+		return author;
+	}
+
+	/**
+	 * @param author the author to set
+	 */
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+	
+	@Override
+	public String toString() {
+		return "EBook [title=" + title + ", author=" + author
+				+ ", creationDate=" + creationDate + ", filename=" + filename
+				+ ", type=" + type + "]";
 	}
 }

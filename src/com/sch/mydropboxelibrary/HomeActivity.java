@@ -19,22 +19,28 @@ package com.sch.mydropboxelibrary;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipInputStream;
+
+import nl.siegmann.epublib.domain.Author;
+import nl.siegmann.epublib.domain.Book;
+import nl.siegmann.epublib.domain.Metadata;
+import nl.siegmann.epublib.epub.EpubReader;
 
 import com.dropbox.sync.android.DbxAccountManager;
 import com.dropbox.sync.android.DbxException;
 import com.dropbox.sync.android.DbxException.Unauthorized;
+import com.dropbox.sync.android.DbxFile;
 import com.dropbox.sync.android.DbxFileInfo;
 import com.dropbox.sync.android.DbxFileSystem;
-import com.dropbox.sync.android.DbxList;
 import com.dropbox.sync.android.DbxPath;
 import com.sch.mydropboxelibrary.adapters.EbookArrayAdapter;
 import com.sch.mydropboxelibrary.model.EBook;
 
 import android.os.Bundle;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -44,15 +50,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class HomeActivity extends Activity {
-	private Toast toast;
+	private static ProgressDialog progdialog;
+	private static Toast toast;
 	private DbxAccountManager mDbxAcctMgr;
 	final static int REQUEST_LINK_TO_DBX = 0;  // This value is up to you
 	
+	@SuppressLint("ShowToast")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 		
+		progdialog = new ProgressDialog(getApplicationContext());
+		progdialog.setTitle(getString(R.string.loading_title));
+		progdialog.setMessage(getString(R.string.loading_ebooks));
+		progdialog.setCancelable(false);
+		progdialog.setIndeterminate(true);
+		toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_LONG);
 		mDbxAcctMgr = DbxAccountManager.getInstance(getApplicationContext(), 
 				"iserf0jchr78w3e", "qv6mo1h43oqgdlj");
 	}
@@ -98,11 +112,13 @@ public class HomeActivity extends Activity {
 	 */
 	private void listEBooks(){
 		setContentView(R.layout.ebooks_listview);
+		progdialog.show();
 		
 		List<EBook> ebooks = new ArrayList<EBook>();
 		EbookArrayAdapter adapter;
 		ListView listview = (ListView) findViewById(R.id.ebooks_list);
 		List<DbxFileInfo> folderItems;
+		List<EBook> ebooksL = new ArrayList<EBook>();
 		
 		try {
 			DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
@@ -112,6 +128,38 @@ public class HomeActivity extends Activity {
 			// Crear otro list view para cambiar de dirctorio? creo q no, mejor uno 
 			// con carpetas o un fragment en el que elegir la ruta que aparezca
 			// sobre el layout y luego debajo los libros??
+			DbxFile dbxfile = null;
+			EpubReader epubreader = new EpubReader();
+			Book book = null;
+			ZipInputStream zipinstream = null;
+			
+			/* Open file if it's an epub file, get the title and author and create 
+			 * a new object according to the model */
+			for(DbxFileInfo dbxfileInfo : folderItems){
+				if(dbxfileInfo.isFolder || !dbxfileInfo.path.getName().endsWith(".epub"))
+					continue;//skip folders
+				try{
+					dbxfile = dbxFs.open(dbxfileInfo.path);
+					zipinstream = new ZipInputStream(dbxfile.getReadStream());
+					book = epubreader.readEpub(zipinstream);
+					String author = "";
+					Metadata metabook = book.getMetadata();
+					// Get all authors of the book
+					for(Author authorB : metabook.getAuthors()){
+						author += ", "+authorB.getFirstname()+authorB.getLastname();
+					}
+					ebooksL.add(new EBook(metabook.getFirstTitle(), author, 
+							dbxfileInfo.modifiedTime, dbxfileInfo.path.getName(), 
+							EBook.EBookType.EPUB));
+					zipinstream.close();
+				}catch(Exception e){
+					// If a file is not valid or can't be opened, it
+					// will be ignored
+					continue;
+				}finally{
+					dbxfile.close();
+				}
+			}//for-end
 			
 			// Pass list to the adapter to create the list of ebooks
 			adapter = new EbookArrayAdapter(this, ebooks);
@@ -132,6 +180,8 @@ public class HomeActivity extends Activity {
 			Log.e("exception", e.getMessage());
 			displayToast(getString(R.string.error_loading_books));
 		}
+		
+		progdialog.dismiss();
 	}
 	
 	/**
@@ -156,4 +206,10 @@ public class HomeActivity extends Activity {
 		toast.show();
 	}
 	
+	/**
+	 * Action that will be run when the change folder button is clicked
+	 */
+	public void onClickChangeDirBtn(View view){
+		displayToast("Implement: Show fragment with the folders of the current directory");
+	}
 }
