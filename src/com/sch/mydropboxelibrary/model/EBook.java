@@ -2,6 +2,7 @@ package com.sch.mydropboxelibrary.model;
 
 import java.util.Date;
 
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 /**
@@ -21,6 +22,7 @@ public class EBook {
 		EPUB;
 	}
 	
+	private String coverfile = "ic_book.jpg";
 	private String title;
 	private String author;
 	private Date creationDate;
@@ -119,6 +121,20 @@ public class EBook {
 		this.author = author;
 	}
 	
+	/**
+	 * @return the coverfile
+	 */
+	public String getCoverfile() {
+		return coverfile;
+	}
+
+	/**
+	 * @param coverfile the coverfile to set
+	 */
+	public void setCoverfile(String coverfile) {
+		this.coverfile = coverfile;
+	}
+
 	@Override
 	public String toString() {
 		return "EBook [title=" + title + ", author=" + author
