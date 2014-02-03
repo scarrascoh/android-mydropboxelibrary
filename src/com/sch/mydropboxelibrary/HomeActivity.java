@@ -84,7 +84,7 @@ public class HomeActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_LONG);
 		mDbxAcctMgr = DbxAccountManager.getInstance(getApplicationContext(),
-				"iserf0jchr78w3e", "qv6mo1h43oqgdlj");
+				DropboxAPIKeys.APP_KEY, DropboxAPIKeys.APP_SECRET);
 		currentDir = DbxPath.ROOT;
 		
 		if (mDbxAcctMgr.hasLinkedAccount()) {
@@ -122,6 +122,7 @@ public class HomeActivity extends Activity {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == REQUEST_LINK_TO_DBX) {
 			if (resultCode == Activity.RESULT_OK) {// Start using Dropbox files.
+				setContentView(R.layout.ebooks_listview);
 				listEBooks();
 			} else {// Link failed or was cancelled by the user.
 				showErrorLoginMessage(getString(R.string.invalid_login));
@@ -132,7 +133,7 @@ public class HomeActivity extends Activity {
 	}
 
 	/**
-	 * Change the layout and lList all e-books with extension .epub in the
+	 * Change the layout and List all e-books with extension .epub in the
 	 * Dropbox current folder
 	 */
 	private void listEBooks() {

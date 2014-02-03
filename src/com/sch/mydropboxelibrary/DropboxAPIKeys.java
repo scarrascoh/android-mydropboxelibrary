@@ -7,6 +7,6 @@ package com.sch.mydropboxelibrary;
  * Git)
  */
 public final class DropboxAPIKeys {
-	 public static final String APP_KEY="FILL_IT_WITH_YOUR_DROPBOX_APP_KEY";
-	 public static final String APP_SECRET="FILL_IT_WITH_YOUR_DROPBOX_APP_SECRET";
+	public static final String APP_KEY="FILL_IT_WITH_YOUR_DROPBOX_APP_KEY";
+	public static final String APP_SECRET="FILL_IT_WITH_YOUR_DROPBOX_APP_SECRET";
 }

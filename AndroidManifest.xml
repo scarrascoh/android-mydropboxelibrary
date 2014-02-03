@@ -20,21 +20,23 @@
         android:screenOrientation="portrait" >
         <activity
             android:name="com.sch.mydropboxelibrary.HomeActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.dropbox.sync.android.DbxAuthActivity" />
+        <activity android:name="com.dropbox.sync.android.DbxAuthActivity"
+            android:screenOrientation="portrait" />
 				
 				<!-- Dropbox Authentication -->
 				<activity
 				  android:name="com.dropbox.client2.android.AuthActivity"
 				  android:launchMode="singleTask" >
 				  <intent-filter>
-				    <data android:scheme="db-iserf0jchr78w3e" />
+				    <data android:scheme="db-sjzl7e64u5le5oh" />
 				    <action android:name="android.intent.action.VIEW" />
 				    <category android:name="android.intent.category.BROWSABLE" />
 				    <category android:name="android.intent.category.DEFAULT" />
