@@ -1,10 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
+    
     <!-- GLOBAL -->
-    <string name="app_name">My Dropbox e-Library</string>
+    <string name="app_name">Mi e-Biblioteca Dropbox</string>
     <string name="action_about">Acerca de</string>
     
     <!-- HOME activity -->
-    <string name="home_login_btn"></string>
-
+    <string name="home_login_btn">Entrar con Dropbox</string>
+    <string name="home_sign_in">¿No tienes una cuenta de Dropbox?  
+    Ve a www.dropbox.com y crea una
+    </string>
+    <string name="sample_text">Texto de ejemplo</string>
+    <string name="no_image">Imagen no encontrada</string>
+    <string name="no_access">No tiene permiso para acceder</string>
+    <string name="invalid_login">Falló la autenticación o fue cancelada por el usuario 
+    </string>
+    <string name="error_loading_books">Error al cargar la lista de e-books</string>
+    <string name="ebl_btn_changedir">Cambiar carpeta</string>
+    <string name="ebl_curdir">/</string>
+    <string name="sort_by_title">título</string>
+    <string name="sort_by_date">fecha</string>
+    <string name="sort_type">Ordenar por</string>
+    <string name="no_entries">No se han encontrado e-books en esta carpeta</string>
+    <string name="loading_title">Cargando</string>
+    <string name="loading_gen">Cargando&#8230;</string>
+    <string name="loading_ebooks">Cargando lista de e-books. Por favor espere&#8230;</string>
+    <string name="loading_folders">Cargando carpetas&#8230;</string>
+    <string name="up_folder">.. &lt;Ir a la carpeta anterior&gt;</string>
+    <string name="change_folder_title">Seleccione una carpeta con e-books</string>
+    <string name="fl_confirm_btn">Cargar carpeta actual</string>
 </resources>
