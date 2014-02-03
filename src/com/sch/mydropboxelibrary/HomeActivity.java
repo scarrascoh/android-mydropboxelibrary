@@ -113,6 +113,7 @@ public class HomeActivity extends Activity {
 			((TextView) findViewById(R.id.home_infotext)).setText("");
 			mDbxAcctMgr.startLink((Activity) this, REQUEST_LINK_TO_DBX);
 		} else {// Already authenticated
+			setContentView(R.layout.ebooks_listview);
 			listEBooks();
 		}
 	}
@@ -139,7 +140,6 @@ public class HomeActivity extends Activity {
 			if(dbxFs == null){
 				dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
 			}
-			setContentView(R.layout.ebooks_listview);
 			/* Load list of ebooks from Dropbox an show them*/
 			new LoadDropboxEbooks().execute();
 		} catch (Unauthorized e) {
