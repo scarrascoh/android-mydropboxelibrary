@@ -172,11 +172,11 @@ public class EbookArrayAdapter extends ArrayAdapter<EBook> {
 		dialog.setContentView(R.xml.ebook_cover);
 
 		ImageView image = (ImageView) dialog.findViewById(R.id.imageview);
-		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN)
+		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN){
 			image.setBackgroundDrawable(ebook.getCoverImage());
-		else
+		}else{
 			image.setBackground(ebook.getCoverImage());
-
+		}
 		// Without this line there is a very small border around the image (1px)
 		dialog.getWindow().setBackgroundDrawable(null);
 

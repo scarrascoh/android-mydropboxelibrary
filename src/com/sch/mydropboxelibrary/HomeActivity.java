@@ -67,7 +67,7 @@ import android.widget.Toast;
  * existing in Dropbox when the user is logged.
  * 
  * @author Sergio Carrasco Herranz (scarrascoh at gmail dot com)
- * @version 1.3
+ * @version 1.4
  */
 public class HomeActivity extends Activity {
 	private ProgressDialog progdialog = null;
@@ -88,15 +88,8 @@ public class HomeActivity extends Activity {
 		currentDir = DbxPath.ROOT;
 		
 		if (mDbxAcctMgr.hasLinkedAccount()) {
-			try{
-				setContentView(R.layout.ebooks_listview);
-				dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr
-					.getLinkedAccount());
-				listEBooks();
-			} catch (Unauthorized e) {
-				Log.e("exception", "Unathourized to access to files");
-				showErrorLoginMessage(getString(R.string.no_access));
-			}
+			setContentView(R.layout.ebooks_listview);
+			listEBooks();
 		}else{
 			setContentView(R.layout.activity_home);
 		}
@@ -115,9 +108,9 @@ public class HomeActivity extends Activity {
 	 * @param view
 	 */
 	public void onClickLoginBtn(View view) {
-		((TextView) findViewById(R.id.home_infotext)).setText("");
 		/* Check if the user is linked with Dropbox */
 		if (!mDbxAcctMgr.hasLinkedAccount()) {
+			((TextView) findViewById(R.id.home_infotext)).setText("");
 			mDbxAcctMgr.startLink((Activity) this, REQUEST_LINK_TO_DBX);
 		} else {// Already authenticated
 			listEBooks();
@@ -142,8 +135,17 @@ public class HomeActivity extends Activity {
 	 * Dropbox current folder
 	 */
 	private void listEBooks() {
-		/* Load list of ebooks from Dropbox an show them*/
-		new LoadDropboxEbooks().execute();
+		try{
+			if(dbxFs == null){
+				dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
+			}
+			setContentView(R.layout.ebooks_listview);
+			/* Load list of ebooks from Dropbox an show them*/
+			new LoadDropboxEbooks().execute();
+		} catch (Unauthorized e) {
+			Log.e("exception", "Unathourized to access to files");
+			showErrorLoginMessage(getString(R.string.no_access));
+		}
 	}
 
 	/**
@@ -284,7 +286,6 @@ public class HomeActivity extends Activity {
 			// Pass list to the adapter to create the list of ebooks
 			// sort by title (by default)
 			adapter = new EbookArrayAdapter(HomeActivity.this, ebooks);
-			adapter.sort(new EBookTitleComparator());
 			listview.setAdapter(adapter);
 			TextView tv = (TextView) findViewById(R.id.ebl_msg);
 			// If list empty, show message
@@ -300,12 +301,7 @@ public class HomeActivity extends Activity {
 				@Override
 				public void onItemSelected(AdapterView<?> parent, View view,
 						int position, long id) {
-					if(parent.getItemAtPosition(position)
-							.equals(getString(R.string.sort_by_date))){
-						adapter.sort(new EBookDateComparator());
-					}else{//Default option
-						adapter.sort(new EBookTitleComparator());
-					}
+					sortEBooksList(adapter, (String) parent.getItemAtPosition(position));
 					//listview.setAdapter(adapter);
 				}
 
@@ -314,11 +310,26 @@ public class HomeActivity extends Activity {
 					// Do nothing
 				}
 			});
+			// Sort ebooks list
+			sortEBooksList(adapter, (String) spinner.getSelectedItem());
 			
 			// remove progress dialog
 			if (HomeActivity.this.progdialog != null) {
 				HomeActivity.this.progdialog.dismiss();
 			}
+		}
+	}
+	
+	/**
+	 * Sort the list of the specified adapter in the specified sort
+	 * @param adapter
+	 * @param sort
+	 */
+	void sortEBooksList(EbookArrayAdapter adapter, String sort) {
+		if(sort.equals(getString(R.string.sort_by_date))){
+			adapter.sort(new EBookDateComparator());
+		}else{//Default option
+			adapter.sort(new EBookTitleComparator());
 		}
 	}
 	
