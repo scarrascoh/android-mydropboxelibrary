@@ -11,6 +11,7 @@
     <color name="button_back_blue">#B9D3EE</color>
     <color name="blue">#104E8B</color>
     <color name="error_msg">#8B2323</color>
+    <color name="text">#000001</color>
     
     <!-- ListView layout -->
     <color name="subtext">#919191</color>

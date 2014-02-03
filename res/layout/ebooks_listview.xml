@@ -58,5 +58,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
       android:layout_below="@id/sort_type"
       tools:listitem="@layout/item_list" >
   </ListView>
+  <TextView 
+      android:id="@+id/ebl_msg"
+      style="@style/DefaultItem"
+      android:layout_below="@id/ebooks_list"
+      android:layout_marginTop="0dp"
+      android:textStyle="italic"
+  />
 
 </RelativeLayout>

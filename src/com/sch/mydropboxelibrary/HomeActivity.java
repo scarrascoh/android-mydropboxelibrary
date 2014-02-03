@@ -35,6 +35,7 @@ import com.dropbox.sync.android.DbxFileInfo;
 import com.dropbox.sync.android.DbxFileSystem;
 import com.dropbox.sync.android.DbxPath;
 import com.sch.mydropboxelibrary.adapters.EbookArrayAdapter;
+import com.sch.mydropboxelibrary.adapters.FolderArrayAdapter;
 import com.sch.mydropboxelibrary.model.EBook;
 import com.sch.mydropboxelibrary.model.comparators.*;
 
@@ -42,14 +43,20 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -60,13 +67,15 @@ import android.widget.Toast;
  * existing in Dropbox when the user is logged.
  * 
  * @author Sergio Carrasco Herranz (scarrascoh at gmail dot com)
- * @version 1.1
+ * @version 1.3
  */
 public class HomeActivity extends Activity {
 	private ProgressDialog progdialog = null;
 	private List<EBook> ebooks;
+	private static DbxPath currentDir, newDir;
 	private static Toast toast;
 	private DbxAccountManager mDbxAcctMgr;
+	private DbxFileSystem dbxFs;
 	final static int REQUEST_LINK_TO_DBX = 0; // This value is up to you
 
 	@SuppressLint("ShowToast")
@@ -76,9 +85,18 @@ public class HomeActivity extends Activity {
 		toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_LONG);
 		mDbxAcctMgr = DbxAccountManager.getInstance(getApplicationContext(),
 				"iserf0jchr78w3e", "qv6mo1h43oqgdlj");
+		currentDir = DbxPath.ROOT;
 		
 		if (mDbxAcctMgr.hasLinkedAccount()) {
-			listEBooks();
+			try{
+				setContentView(R.layout.ebooks_listview);
+				dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr
+					.getLinkedAccount());
+				listEBooks();
+			} catch (Unauthorized e) {
+				Log.e("exception", "Unathourized to access to files");
+				showErrorLoginMessage(getString(R.string.no_access));
+			}
 		}else{
 			setContentView(R.layout.activity_home);
 		}
@@ -124,7 +142,7 @@ public class HomeActivity extends Activity {
 	 * Dropbox current folder
 	 */
 	private void listEBooks() {
-		/* Load list of ebooks from Dropbox an show them*/ 
+		/* Load list of ebooks from Dropbox an show them*/
 		new LoadDropboxEbooks().execute();
 	}
 
@@ -155,7 +173,22 @@ public class HomeActivity extends Activity {
 	 * Action that will be run when the change folder button is clicked
 	 */
 	public void onClickChangeDirBtn(View view) {
-		displayToast("Implement: Show fragment with the folders of the current directory");
+		//displayToast("Clicked btn");
+		newDir = currentDir;
+		new LoadDropboxFolders().execute();
+	}
+	
+	/**
+	 * Change the current folder to the specified and load the ebooks
+	 */
+	public void changeFolder(DbxPath folder){
+		// If go to previous folder and NO ROOT, load previous folder
+		if(folder.getName().equals(getString(R.string.up_folder))){
+			newDir = folder.getParent().getParent();
+		}else{
+			newDir = folder;
+		}
+		new LoadDropboxFolders().execute();
 	}
 
 	/* ************************* SUBCLASSES ***************************** */
@@ -179,15 +212,8 @@ public class HomeActivity extends Activity {
 			List<EBook> ebooksL = new ArrayList<EBook>();
 
 			try {
-				DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr
-						.getLinkedAccount());
-				folderItems = dbxFs.listFolder(DbxPath.ROOT);
-				//
-				// TODO 0. Seguir aqui. Listar carpetas y ebooks
-				// Crear otro list view para cambiar de dirctorio? creo q no, mejor
-				// uno
-				// con carpetas o un fragment en el que elegir la ruta que aparezca
-				// sobre el layout y luego debajo los libros??
+				folderItems = dbxFs.listFolder(currentDir);
+
 				DbxFile dbxfile = null;
 				EpubReader epubreader = new EpubReader();
 				Book book = null;
@@ -248,7 +274,7 @@ public class HomeActivity extends Activity {
 		
 		@Override
 		protected void onPostExecute(List<EBook> result) {
-			setContentView(R.layout.ebooks_listview);
+			//setContentView(R.layout.ebooks_listview);
 			final ListView listview = (ListView) findViewById(R.id.ebooks_list);
 			final EbookArrayAdapter adapter;
 			
@@ -260,6 +286,13 @@ public class HomeActivity extends Activity {
 			adapter = new EbookArrayAdapter(HomeActivity.this, ebooks);
 			adapter.sort(new EBookTitleComparator());
 			listview.setAdapter(adapter);
+			TextView tv = (TextView) findViewById(R.id.ebl_msg);
+			// If list empty, show message
+			if(adapter.getCount() == 0){
+				tv.setText(R.string.no_entries);
+			}else{
+				tv.setText("");
+			}
 			
 			//Set on change event for spinner
 			Spinner spinner = (Spinner) findViewById(R.id.sort_type);
@@ -286,6 +319,103 @@ public class HomeActivity extends Activity {
 			if (HomeActivity.this.progdialog != null) {
 				HomeActivity.this.progdialog.dismiss();
 			}
+		}
+	}
+	
+	/**
+	 * Load data from Dropbox in background (asynctask)
+	 */
+	class LoadDropboxFolders extends AsyncTask<Void, Void, List<DbxPath>> {
+		@Override
+		protected void onPreExecute() {
+			//showDialog(AUTHORIZING_DIALOG);
+			HomeActivity.this.progdialog = ProgressDialog.show(
+					HomeActivity.this, 
+					getString(R.string.loading_title), 
+					getString(R.string.loading_folders));
+		}
+
+		@Override
+		protected List<DbxPath> doInBackground(Void... v) {
+			List<DbxFileInfo> folderItems;
+			List<DbxPath> foldersL = new ArrayList<DbxPath>();
+
+			try {
+				folderItems = dbxFs.listFolder(newDir);
+				if(!newDir.equals(DbxPath.ROOT)){
+					foldersL.add(new DbxPath(newDir, 
+							getString(R.string.up_folder)));
+				}
+				
+				/*
+				 * Get the list of folders of the current directory
+				 */
+				for (int i=0; i < folderItems.size(); i++) {
+					DbxFileInfo dbxfileInfo = folderItems.get(i);
+					if (!dbxfileInfo.isFolder){ continue; } //skip files
+					foldersL.add(dbxfileInfo.path);
+				}// for-end
+			} catch (Unauthorized e) {
+				Log.e("exception", "Unathourized to access to files");
+				showErrorLoginMessage(getString(R.string.no_access));
+			} catch (DbxException e) {
+				Log.e("exception", e.getMessage());
+				displayToast(getString(R.string.error_loading_books));
+			}
+
+			return foldersL;
+		}
+		
+		@Override
+		protected void onPostExecute(List<DbxPath> foldersL) {
+			// Open dialog
+			final Dialog dlg = new Dialog(HomeActivity.this);
+			LayoutInflater li = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			View v = li.inflate(R.layout.folders_listview, null, false);
+			dlg.setTitle(R.string.change_folder_title);
+			dlg.setContentView(v);
+			ListView listview = (ListView) dlg.findViewById(R.id.folders_list);
+			final FolderArrayAdapter adapter;
+			
+			// Pass list to the adapter to create the list of folders
+			adapter = new FolderArrayAdapter(dlg.getContext(), foldersL);
+			listview.setAdapter(adapter);
+			// Load folders when selected one
+			listview.setOnItemClickListener(new OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					dlg.dismiss();
+					HomeActivity.this.changeFolder((DbxPath) parent.getItemAtPosition(position));
+				}
+			});
+			// Load ebooks when confirm button clicked
+			Button confirmBtn = (Button) dlg.findViewById(R.id.fl_confirm_btn);
+			confirmBtn.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					dlg.dismiss();
+					TextView tv = (TextView) findViewById(R.id.ebl_curdir);
+					if(newDir.equals(DbxPath.ROOT)){
+						tv.setText("/");
+					}else{
+						tv.setText(newDir.toString());
+					}
+					if(!currentDir.equals(newDir)){
+						currentDir = newDir;
+						listEBooks();
+					}
+				}
+			});
+			
+			// remove progress dialog
+			if (HomeActivity.this.progdialog != null) {
+				HomeActivity.this.progdialog.dismiss();
+			}
+			
+			// Show list of folders
+			dlg.show();
 		}
 	}
 }

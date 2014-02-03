@@ -1,0 +1,4 @@
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/folder_item"
+    style="@style/DefaultItem"
+    android:textColor="@color/text" />

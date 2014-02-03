@@ -22,8 +22,12 @@
     <string name="sort_by_title">title</string>
     <string name="sort_by_date">date</string>
     <string name="sort_type">Sort by</string>
-    <string name="no_entry">No entries</string>
+    <string name="no_entries">Ebooks not found in this folder</string>
     <string name="loading_title">Loading</string>
     <string name="loading_gen">Loading&#8230;</string>
     <string name="loading_ebooks">Loading list of ebooks. Please wait&#8230;</string>
+    <string name="loading_folders">Loading folders&#8230;</string>
+    <string name="up_folder">.. &lt;Go to previous folder&gt;</string>
+    <string name="change_folder_title">Select a folder with ebooks</string>
+    <string name="fl_confirm_btn">Load current folder</string>
 </resources>

@@ -4,7 +4,4 @@
         <item>@string/sort_by_title</item>
         <item>@string/sort_by_date</item>
     </string-array>
-    <string-array name="no_entries">
-        <item>@string/no_entry</item>
-    </string-array>
 </resources>
